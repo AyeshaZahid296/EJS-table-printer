@@ -1,27 +1,26 @@
-// server.js
+// api/index.js
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require('path');
+
 const app = express();
-const PORT = 3000;
 
-// View engine set
+// Set EJS as view engine
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '..', 'views')); // <-- fix path for views
 
-// Body parser
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// GET route - show input form
+// Routes
 app.get('/', (req, res) => {
-    res.render('form'); // show form to user
+    res.render('form');
 });
 
-// POST route - handle user input and show table
 app.post('/table', (req, res) => {
-    const number = parseInt(req.body.number); // get number from form
-
-    // Generate table from 1 to 10
+    const number = parseInt(req.body.number);
     const table = [];
+
     for (let i = 1; i <= 10; i++) {
         table.push(`${number} x ${i} = ${number * i}`);
     }
@@ -29,6 +28,5 @@ app.post('/table', (req, res) => {
     res.render('table', { number, table });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-});
+// Export app for Vercel
+module.exports = app;
